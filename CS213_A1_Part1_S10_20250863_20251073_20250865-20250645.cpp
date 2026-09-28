@@ -52,9 +52,66 @@ break;
 case 5: 
 //
 break;
-case 6: 
-//
+case 6:
+{
+string namefile_user;
+int query;
+double original_centrex = (image_name.width-1)/2.0; 
+double original_centrey = (image_name.height-1)/2.0;
+cout << "Press '1' if you would like to rotate 90 degrees clockwise/270 degrees anticlockwise"<< "\n";
+cout << "Press '2' if you would like to rotate 180 degrees clockwise/anticlockwise" << "\n";
+cout << "Press '3' if you would like to rotate 270 degrees clockwise/90 degrees anticlockwise"<< "\n";
+cout << "Press '4' if you want no changes"<< "\n";
+cin >> query;
+int target_w = (query == 1 || query == 3) ? image_name.height : image_name.width; //if you rotate 90 degrees or 270 degrees, the dimensions will change
+int target_h = (query == 1 || query == 3) ? image_name.width : image_name.height;
+Image image_after(target_w, target_h);
+double target_centrex = (image_after.width - 1) / 2.0;
+double target_centrey = (image_after.height - 1) / 2.0;
+for(auto y = 0; y < image_after.height; ++y) {
+    for(auto x = 0; x < image_after.width; ++x) {
+        double halal_cheating_ofx = x - target_centrex;
+        double halal_cheating_ofy = y - target_centrey;
+        double spun_x = 0;
+        double spun_y = 0;
+
+        // rotating section
+        if(query == 1) {
+            spun_x = -halal_cheating_ofy;
+            spun_y = halal_cheating_ofx;
+        }
+        else if(query == 2) {
+            spun_x = -halal_cheating_ofx;
+            spun_y = -halal_cheating_ofy;
+        }
+        else if(query == 3) {
+            spun_x = halal_cheating_ofy;
+            spun_y = -halal_cheating_ofx;
+        }
+        else {
+            spun_x = halal_cheating_ofx;
+            spun_y = halal_cheating_ofy; 
+        }
+        int source_x = int(spun_x + original_centrex + 0.5);
+        int source_y = int(spun_y + original_centrey + 0.5);
+
+
+
+
+       
+        if (source_x >= 0 && source_x < image_name.width && source_y >= 0 && source_y < image_name.height) {
+    image_after.setPixel(x, y, 0, image_name.getPixel(source_x, source_y, 0)); // Assign validated value to red
+    image_after.setPixel(x, y, 1, image_name.getPixel(source_x, source_y, 1)); // Assign validated value to green
+    image_after.setPixel(x, y, 2, image_name.getPixel(source_x, source_y, 2)); // Assign validated value to blue
+}
+}
+}
+cout << "How would you like to name the image alongside the extension?"<< "\n";
+cin >> ws; // what this basically is like when you input the filename, you might put a space or two, this wont count as an input. ws = whitespace
+getline(cin,namefile_user);
+image_after.saveImage(namefile_user);
 break;
+}
 case 7: 
 //
 break;
