@@ -4,11 +4,11 @@
 using namespace std;
 
 int main() {
-    cout<<"Do you want to darken or lighten the image? (Enter 'darken' or 'lighten'): ";
+    cout<<"Do you want to darken or lighten the image? (Enter darken or lighten):";
     string c;
     cin >> c;
     if (c=="darken") {
-        cout<<"Enter the darkening percent (0 to 100%): ";
+        cout<<"Enter the darkening percent (0 to 100%):";
         int p;
         cin >> p;
        
@@ -30,7 +30,7 @@ int main() {
         }
     }
     else if (c=="lighten") {
-        cout<<"Enter the lightening percent (0-100%): ";
+        cout<<"Enter the lightening percent (0 to 100%):";
         int p;
         cin >> p;
 
