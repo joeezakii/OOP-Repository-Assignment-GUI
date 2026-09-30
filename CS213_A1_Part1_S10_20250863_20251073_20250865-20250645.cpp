@@ -39,7 +39,7 @@ image_after.setPixel(x,y,2,gray_value);
 }
 }
 cout << "How would you like to name the image alongside the extension?"<< "\n";
-cin.ignore();
+cin >> ws;
 getline(cin,namefile_user);
 image_after.saveImage(namefile_user);
 break;
@@ -56,7 +56,7 @@ Image image_after = image_name;
         }
     }
 cout << "How would you like to name the image alongside the extension?"<< "\n";
-cin.ignore();
+cin >> ws;
 getline(cin,namefile_user);
 image_after.saveImage(namefile_user);
 break;
@@ -128,10 +128,63 @@ image_after.saveImage(namefile_user);
 break;
 }
 case 7: 
+{
+string namefile_user;
+Image image_after = image_name;
+cout<< "Do you want to darken or lighten the image? (Enter darken/Darken or lighten/Lighten):";
+string c;
+cin >> c;
+if (c == "darken" || c == "Darken") {
+        cout<<"Enter the darkening percent (0 to 100%):";
+        int p;
+        cin >> p;
+        while(p < 0 || p > 100) {
+            cout<<"Invalid input, please try entering the percentage again from 0%-100%"<<endl;
+            cin >> p;
+        }
+         for (int i = 0; i < image_after.width; i++) {
+                for (int j = 0; j < image_after.height; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        image_after(i, j, k) = image_after(i, j, k)*(1 - p / 100.0);
+                    }
+                }
+        }
+        cout << "How would you like to name the image alongside the extension?"<< "\n";
+        cin >> ws; // what this basically is like when you input the filename, you might put a space or two, this wont count as an input. ws = whitespace
+        getline(cin,namefile_user);
+        image_after.saveImage(namefile_user);
+        break;
+    }
+    else if (c == "lighten" || c == "Lighten") {
+        cout<<"Enter the lightening percent (0 to 100%):";
+        int p;
+        cin >> p;
+    while(p < 0 || p > 100) {
+            cout<<"Invalid input, please try entering the percentage again from 0%-100%"<<endl;
+            cin >> p;
+        }
+       for (int i = 0; i < image_after.width; i++) {
+                for (int j = 0; j < image_after.height; j++) {
+                    for (int k = 0; k < 3; k++) {
+                       image_after(i, j, k) = image_after(i, j, k) + (255 - image_after(i, j, k))*(p / 100.0);
+                        if(image_after(i, j, k)>255){
+                            image_after(i, j, k) = 255;
+                        }
+                    }
+                }
+            }
+        cout << "How would you like to name the image alongside the extension?"<< "\n";
+        cin >> ws; // what this basically is like when you input the filename, you might put a space or two, this wont count as an input. ws = whitespace
+        getline(cin,namefile_user);
+        image_after.saveImage(namefile_user);
+        break;
+    }
+
+
+}
+case 8: {
 //
-break;
-case 8: 
-//
+}
 break;
 default:
 cout << "Error in the query choice number you have entered, please try again";
@@ -143,6 +196,7 @@ if(choice == "no" || choice == "No" || choice == "nO") {
     break;
     return 0;
 }
+
 }
 return 0;
 }
