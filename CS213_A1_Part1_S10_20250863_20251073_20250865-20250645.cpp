@@ -2,6 +2,14 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+/* 1. Youssef Khaled Hussein 20250863 (The one who'll submit the assignment 1 part 1) 
+Filters: 2,6
+2. Bassam Islam Gomaa 20251073 
+Filters 4,8
+3. Ahmed Bassam Abdelfatah 20250865
+Filters 3,7
+4. Mostafa Mahmoud Abdella 20250645
+Filters 1,5 */
 using namespace std;
 int main() 
 {
@@ -62,9 +70,63 @@ image_after.saveImage(namefile_user);
 break;
 }
 case 4: 
-//
+{
+string namefile_user;
+Image image_after = image_name;
+int choice, padding = 0, r = 0, g = 0, b = 0;
+        do {
+            cout << "Enter padding size in pixels (e.g. 500): ";
+            cin >> padding;
+        } while (padding < 0);
+        
+    padding = padding * 2;
+        do {
+            cout << "Select border color:\n1. Red\n2. Green\n3. Blue\n4. Custom RGB\nEnter choice (1-4): ";
+            cin >> choice;
+        }
+        while (choice < 1 || choice > 4);
+
+    switch (choice) {
+        case 1: r = 255; break;
+        case 2: g = 255; break;
+        case 3: b = 255; break;
+        case 4:
+            do {
+                cout << "Enter R G B (0-255): ";
+                cin >> r >> g >> b;
+            }
+            while (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255);
+            break;
+        default:
+            r = g = b = 255;
+            break;
+    }
+
+    Image frame(image_after.width + padding, image_after.height + padding) ;
+
+        for (int i = 0; i < frame.width; i++) {
+            for (int j = 0; j < frame.height; j++) {
+                frame(i, j, 0) = r;
+                frame(i, j, 1) = g;
+                frame(i, j, 2) = b;
+            }
+        }
+        for (int i = 0; i < image_after.width; i++) {
+            for (int j = 0; j < image_after.height; j++) {
+                for (int k = 0; k < image_after.channels; k++) {
+                    frame(i + padding/2, j + padding/2, k) = image_after(i, j, k);
+                }
+            }
+        }
+    cout << "How would you like to name the image alongside the extension?"<< "\n";
+cin >> ws;
+getline(cin,namefile_user);
+image_after.saveImage(namefile_user);
 break;
-case 5: 
+}
+case 5: {
+
+}
 //
 break;
 case 6:
