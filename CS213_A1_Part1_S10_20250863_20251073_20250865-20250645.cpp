@@ -14,6 +14,7 @@ Image image_name(s);
 while(flag) 
 {
 cout << "Which option would you like to do?" << "\n";
+cout <<"1: Grayscale" << "\n" << "2: Black and White" << "\n" << "3: Inverted Image" << "\n" <<"4: Adding a frame onto a picture"<< "\n" << "5: Flip an Image (Horizontally/Vertically)" << "\n" << "6: Rotate an Image" << "\n" << "7: Darken/Lighten Image" << "\n" << "8: Resize an Image" <<"\n";
 cin >> option_no;
 switch(option_no) 
 {
@@ -44,8 +45,22 @@ image_after.saveImage(namefile_user);
 break;
 }
 case 3: 
-//
+{
+string namefile_user;
+Image image_after = image_name;
+  for (int i = 0; i < image_after.width; i++) {
+        for (int j = 0; j < image_after.height; j++) {
+            for (int k = 0; k < 3; k++) {
+                image_after(i, j, k) = 255 - image_after(i, j, k);
+            }
+        }
+    }
+cout << "How would you like to name the image alongside the extension?"<< "\n";
+cin.ignore();
+getline(cin,namefile_user);
+image_after.saveImage(namefile_user);
 break;
+}
 case 4: 
 //
 break;
@@ -121,11 +136,12 @@ break;
 default:
 cout << "Error in the query choice number you have entered, please try again";
 }
-cout << "Would you like to continue, type in Yes if you want to continue to do more changes and 'No' if you want to end the program";  
+cout << "Would you like to continue, type in Yes if you want to continue to do more changes or 'No' if you want to end the program" << "\n";  
 cin >> choice;
 if(choice == "no" || choice == "No" || choice == "nO") {
     flag = false;
     break;
+    return 0;
 }
 }
 return 0;
