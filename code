@@ -4,6 +4,57 @@
 #include "Image_Class.h"
 
 using namespace std;
+void resize(){
+
+    string namee;
+    cout << "which photo would you like to do the changes in, make sure you chose the image with the right filename and extension." << endl;
+    getline(cin, namee);
+    Image pic(namee);
+    int option,w,h,new_w,new_h;
+
+    cout << "\nselect option:\n"<< "1 double sizee\n"<< "2. half size \n"<< "3. custom dimenisons\n"<< "enter option 1-3 ";
+    cin >> option;
+
+    switch (option){
+        case 1:
+            w = pic.width * 2;
+            h = pic.height * 2;
+            break;
+        case 2:
+            w = pic.width / 2;
+            h = pic.height / 2;
+            break;
+        case 3:
+            cout << "new width: ";
+            cin >> w;
+            cout << "new height ";
+            cin >> h;
+            break;
+        default:
+            cout << "Invalid\n";
+            w = pic.width;
+            h = pic.height;
+            break;
+    }
+    Image cust(w,h);
+    float scale_X = (float)pic.width / cust.width;
+    float scale_Y = (float)pic.height / cust.height;
+
+        for (int i = 0; i < cust.width; i++){
+            for (int j = 0; j < cust.height; j++){
+
+                float orignil_X = (float)(i * scale_X);
+                float orignil_Y = (float)(j * scale_Y);
+
+                for (int k = 0; k < pic.channels; k++){
+                    cust(i, j, k) = pic(orignil_X, orignil_Y, k);
+                }
+
+            }
+        }
+    
+    cust.saveImage("new_photo.jpeg");
+}
 void frame(){
 
     string namee;
@@ -63,5 +114,6 @@ void frame(){
 
 int main() {
     frame();
+    resize();
     return 0;
 }
