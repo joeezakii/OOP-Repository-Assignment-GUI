@@ -3,14 +3,17 @@
 #include <iomanip>
 #include <string>
 
-/* 1. Youssef Khaled Hussein 20250863 (The one who'll submit the assignment 1 part 1) 
+/* Assignment 1 Part 1
+Group Members:
+1. Youssef Khaled Hussein 20250863 (The one who'll submit the assignment 1 part 1) 
 Filters: 2,6
 2. Bassam Islam Gomaa 20251073 
 Filters 4,8
 3. Ahmed Bassam Abdelfatah 20250865
 Filters 3,7
 4. Mostafa Mahmoud Abdella 20250645
-Filters 1,5 */
+Filters 1,5 
+Section: S10 */
 
 using namespace std;
 //here is where the function (procedure to be much more accurate) starts where it sets an avg value for pixels to provide a grayscale image 
