@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+using namespace std;
 /* 1. Youssef Khaled Hussein 20250863 (The one who'll submit the assignment 1 part 1) 
 Filters: 2,6
 2. Bassam Islam Gomaa 20251073 
@@ -10,7 +11,129 @@ Filters 4,8
 Filters 3,7
 4. Mostafa Mahmoud Abdella 20250645
 Filters 1,5 */
-using namespace std;
+
+
+//here is where the function (procedure to be much more accurate) starts where it sets an avg value for pixels to provide a grayscale image 
+void grayscale(Image& image)
+{
+    for (int i = 0; i < image.width; i++)
+    {
+        for (int j = 0; j < image.height; j++)
+        {
+          int red = image(i,j,0);   
+
+          int green = image(i,j,1);
+
+          int blue = image(i,j,2);
+
+          int average = (red + green + blue) / 3;
+
+          image(i,j,0) = average;
+
+          image(i,j,1) = average;
+
+          image(i,j,2) = average;
+        }
+    }
+}
+
+//flips the image horziontally (Ymen shmal)
+void horizontalFlip(Image& image)
+{
+    for (int i = 0; i < image.width / 2; i++)
+    {
+        for (int j = 0; j < image.height; j++)
+        {
+            for (int c = 0; c < 3; c++)
+            {
+                unsigned char temp = image.getPixel(i, j, c);
+
+                image.setPixel(i, j, c,
+                    image.getPixel(image.width - 1 - i, j, c));
+
+                image.setPixel(image.width - 1 - i, j, c, temp);
+            }
+        }
+    }
+}
+
+
+//flips the image vertically (f2 w t7t)
+void verticalFlip(Image& image)
+{
+    for (int i = 0; i < image.width; i++)
+    {
+        for (int j = 0; j < image.height / 2; j++)
+        {
+            for (int c = 0; c < 3; c++)
+            {
+//temp variable to store the current pixel value so it doesn't get lost  after swap and gets ruined             
+                unsigned char temp = image.getPixel(i, j, c);
+
+                image.setPixel(i, j, c,
+                    image.getPixel(i, image.height - 1 - j, c));
+
+                image.setPixel(i, image.height - 1 - j, c, temp);
+            }
+        }
+    }
+}
+
+void resize(Image& image_param){
+    int option,w,h,new_w,new_h;
+    string namefile_user;
+    cout << "Select an option out of the 3 options: \n"<< "1: Double the image size\n"<< "2: Half the image size \n"<< "3: Resize image using custom dimensions \n" ;
+    cin >> option;
+
+    switch (option){
+        case 1:
+            w = image_param.width * 2;
+            h = image_param.height * 2;
+            break;
+        case 2:
+            w = image_param.width / 2;
+            h = image_param.height / 2;
+            break;
+        case 3:
+            cout << "new width: ";
+            cin >> w;
+            cout << "new height ";
+            cin >> h;
+            break;
+
+        default:
+            cout << "Invalid\n";
+            w = image_param.width;
+            h = image_param.height;
+            break;
+    }
+    Image cust(w,h);
+    float scale_X = (float)image_param.width / cust.width;
+    float scale_Y = (float)image_param.height / cust.height;
+
+        for (int i = 0; i < cust.width; i++){
+            for (int j = 0; j < cust.height; j++){
+
+                float orignil_X = (float)(i * scale_X);
+                float orignil_Y = (float)(j * scale_Y);
+
+                for (int k = 0; k < image_param.channels; k++){
+                    cust(i, j, k) = image_param(orignil_X, orignil_Y, k);
+                }
+
+            }
+        }
+    cout << "How would you like to name the image alongside the extension?"<< "\n";
+    cin >> ws;
+    getline(cin,namefile_user);
+    cust.saveImage(namefile_user);
+}
+
+
+
+
+
+
 int main() 
 {
 bool flag = true;
@@ -26,10 +149,17 @@ cout <<"1: Grayscale" << "\n" << "2: Black and White" << "\n" << "3: Inverted Im
 cin >> option_no;
 switch(option_no) 
 {
-case 1: 
-//
-
+case 1: {
+//this is where we put our input an image to get a grayscale output 
+    Image image_after;
+    string namefile_user;
+grayscale(image_after);
+    cout << "How would you like to name the image alongside the extension?" << "\n";
+cin >> ws;
+getline(cin, namefile_user);
+image_after.saveImage(namefile_user);
 break;
+}
 case 2: {
 int x,y;
 string namefile_user;
@@ -71,20 +201,19 @@ break;
 }
 case 4: 
 {
-string namefile_user;
-Image image_after = image_name;
-int choice, padding = 0, r = 0, g = 0, b = 0;
-        do {
-            cout << "Enter padding size in pixels (e.g. 500): ";
-            cin >> padding;
-        } while (padding < 0);
-        
+    string namefile_user;
+    Image image_after = image_name;
+    int choice, padding = 0, r = 0, g = 0, b = 0;
+            do {
+                cout << "Enter padding size in pixels (e.g. 500): ";
+                cin >> padding;
+            } while (padding < 0);
     padding = padding * 2;
-        do {
-            cout << "Select border color:\n1. Red\n2. Green\n3. Blue\n4. Custom RGB\nEnter choice (1-4): ";
-            cin >> choice;
-        }
-        while (choice < 1 || choice > 4);
+            do {
+                cout << "Select border color:\n1. Red\n2. Green\n3. Blue\n4. Custom RGB\nEnter choice (1-4): ";
+                cin >> choice;
+            }
+            while (choice < 1 || choice > 4);
 
     switch (choice) {
         case 1: r = 255; break;
@@ -100,9 +229,9 @@ int choice, padding = 0, r = 0, g = 0, b = 0;
         default:
             r = g = b = 255;
             break;
-    }
+        }
 
-    Image frame(image_after.width + padding, image_after.height + padding) ;
+    Image frame(image_name.width + padding, image_name.height + padding) ;
 
         for (int i = 0; i < frame.width; i++) {
             for (int j = 0; j < frame.height; j++) {
@@ -111,23 +240,45 @@ int choice, padding = 0, r = 0, g = 0, b = 0;
                 frame(i, j, 2) = b;
             }
         }
-        for (int i = 0; i < image_after.width; i++) {
-            for (int j = 0; j < image_after.height; j++) {
-                for (int k = 0; k < image_after.channels; k++) {
-                    frame(i + padding/2, j + padding/2, k) = image_after(i, j, k);
+        for (int i = 0; i < image_name.width; i++) {
+            for (int j = 0; j < image_name.height; j++) {
+                for (int k = 0; k < image_name.channels; k++) {
+                    frame(i + padding/2, j + padding/2, k) = image_name(i, j, k);
                 }
             }
         }
     cout << "How would you like to name the image alongside the extension?"<< "\n";
 cin >> ws;
 getline(cin,namefile_user);
-image_after.saveImage(namefile_user);
+frame.saveImage(namefile_user);
 break;
 }
 case 5: {
+    string namefile_user, flip_query;
+    Image image_after = image_name;
+    cout << "Would you like to flip the image horizontally or vertically?" << "\n";
+    cin >> flip_query;
+    while(flip_query != "horizontally" && flip_query != "Horizontally" && flip_query != "vertically" && flip_query != "Vertically") {
+        cout << "Incorrect query, please try again." << "\n";
+        cin >> flip_query;
+    }
 
-}
-//
+    if(flip_query == "horizontally" || flip_query == "Horizontally") {
+        horizontalFlip(image_after);
+        cout << "How would you like to name the image alongside the extension?"<< "\n";
+        cin >> ws;
+        getline(cin,namefile_user);
+        image_after.saveImage(namefile_user);
+    }
+    else if(flip_query == "vertically" || flip_query == "Vertically")
+    {
+        verticalFlip(image_after);
+        cout << "How would you like to name the image alongside the extension?"<< "\n";
+        cin >> ws;
+        getline(cin,namefile_user);
+        image_after.saveImage(namefile_user);
+    }
+    }
 break;
 case 6:
 {
@@ -245,7 +396,9 @@ if (c == "darken" || c == "Darken") {
 
 }
 case 8: {
-//
+string namefile_user;
+Image image_after = image_name;
+resize(image_after);
 }
 break;
 default:
