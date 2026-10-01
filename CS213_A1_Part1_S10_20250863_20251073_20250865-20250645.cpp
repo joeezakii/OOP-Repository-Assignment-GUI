@@ -2,7 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-using namespace std;
+
 /* 1. Youssef Khaled Hussein 20250863 (The one who'll submit the assignment 1 part 1) 
 Filters: 2,6
 2. Bassam Islam Gomaa 20251073 
@@ -12,7 +12,7 @@ Filters 3,7
 4. Mostafa Mahmoud Abdella 20250645
 Filters 1,5 */
 
-
+using namespace std;
 //here is where the function (procedure to be much more accurate) starts where it sets an avg value for pixels to provide a grayscale image 
 void grayscale(Image& image)
 {
@@ -130,10 +130,6 @@ void resize(Image& image_param){
 }
 
 
-
-
-
-
 int main() 
 {
 bool flag = true;
@@ -151,30 +147,30 @@ switch(option_no)
 {
 case 1: {
 //this is where we put our input an image to get a grayscale output 
-    Image image_after;
+    Image image_after = image_name;
     string namefile_user;
-grayscale(image_after);
+    grayscale(image_after);
     cout << "How would you like to name the image alongside the extension?" << "\n";
-cin >> ws;
-getline(cin, namefile_user);
-image_after.saveImage(namefile_user);
+    cin >> ws;
+    getline(cin, namefile_user);
+    image_after.saveImage(namefile_user);
 break;
 }
 case 2: {
 int x,y;
 string namefile_user;
 Image image_after = image_name;
-for(int y = 0; y < image_after.height; ++y){
-for(int x = 0; x < image_after.width; ++x){
-unsigned int red_colour = image_name.getPixel(x,y,0);
-unsigned int green_colour = image_name.getPixel(x,y,1);
-unsigned int blue_colour= image_name.getPixel(x,y,2);
-unsigned int gray_value = int((red_colour*0.2126)+(green_colour*0.7152)+(blue_colour*0.0722));
-//such that 4th parameter of set_pixel is the value of gray colour
-image_after.setPixel(x,y,0,gray_value);
-image_after.setPixel(x,y,1,gray_value);
-image_after.setPixel(x,y,2,gray_value);
-}
+for(int y = 0; y < image_after.height; ++y) {
+    for(int x = 0; x < image_after.width; ++x) {
+        unsigned int red_colour = image_name.getPixel(x,y,0);
+        unsigned int green_colour = image_name.getPixel(x,y,1);
+        unsigned int blue_colour= image_name.getPixel(x,y,2);
+        unsigned int gray_value = int((red_colour*0.2126)+(green_colour*0.7152)+(blue_colour*0.0722));
+        //such that 4th parameter of set_pixel is the value of gray colour
+        image_after.setPixel(x,y,0,gray_value);
+        image_after.setPixel(x,y,1,gray_value);
+        image_after.setPixel(x,y,2,gray_value);
+    }
 }
 cout << "How would you like to name the image alongside the extension?"<< "\n";
 cin >> ws;
