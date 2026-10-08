@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <string>
 #include <algorithm>
-
+#include <cmath>
 /* Assignment 1 Part 1
 Group Members:
 1. Youssef Khaled Hussein 20250863 (The one who'll submit the assignment 1 part 1) 
@@ -477,20 +477,43 @@ break;
 case 10: {
 string namefile_user;
 Image image_after = image_name;
+grayscale(image_after);
+Image edge_image(image_after.width, image_after.height);
+for(int i = 1; i < image_after.width; i++) {
+    for(int j = 1; j < image_after.height; j++) {
+            int gx = -1 * image_after(i-1, j-1, 0) + 1 * image_after(i+1,j-1,0)
+                   + -2 * image_after(i-1, j,   0) + 2 * image_after(i+1,j,0)
+                   + -1 * image_after(i-1, j+1, 0) + 1 * image_after(i+1, j+1, 0);
 
+            int gy = -1 * image_after(i-1, j-1, 0) - 2 * image_after(i, j-1, 0) - 1 * image_after(i+1, j-1, 0)
+                   +  1 * image_after(i-1, j+1, 0) + 2 * image_after(i, j+1, 0) + 1 * image_after(i+1, j+1, 0);
+
+            int magnitude = (int)sqrt((double)(pow(gx, 2) + pow(gy, 2)));
+            if (magnitude > 255) magnitude = 255;
+
+            edge_image(i, j, 0) = 255 -  magnitude;
+            edge_image(i, j, 1) = 255 - magnitude;
+            edge_image(i, j, 2) = 255 - magnitude;
+    }
 }
 
+cout << "How would you like to name the image alongside the extension?"<< "\n";
+cin >> ws;
+getline(cin,namefile_user);
+edge_image.saveImage(namefile_user);
+break;
+}
 
 case 11: {
 string namefile_user;
 Image image_after = image_name;
-
+break;
 }
 
 case 12: {
 string namefile_user;
 Image image_after = image_name;
-
+break;
 }
 case 13: {
 string namefile_user;
