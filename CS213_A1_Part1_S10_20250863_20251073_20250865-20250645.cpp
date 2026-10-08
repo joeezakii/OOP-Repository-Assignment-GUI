@@ -507,6 +507,27 @@ break;
 case 11: {
 string namefile_user;
 Image image_after = image_name;
+    int w,x,y,z;
+    cout<<"Insert starting point for width and height"<<endl;
+    cin>>w>>x;
+    cout<<"Insert crop width and height desired"<<endl;
+    cin>>y>>z;
+    while (w<0 || x<0 || y<0 || z<0 || w> image_after.width || x>image_after.height || w+y>image_after.width || x+z>image_after.height){
+        cout<<"Invalid crop dimensions, try entering correct dimension values again.."<<endl;
+        cin >> w >> x >> y >> z;
+    }
+    Image cropped_image(y,z);
+    for(int i=0; i<y; i++){
+        for(int j=0; j<z; j++){
+            for(int k=0; k<3; k++){
+                cropped_image(i,j,k)=image_after(w+i,x+j,k);
+            }
+        }
+    }
+    cout << "How would you like to name the image alongside the extension?"<< "\n";
+    cin >> ws;
+    getline(cin,namefile_user);
+    cropped_image.saveImage(namefile_user);
 break;
 }
 
