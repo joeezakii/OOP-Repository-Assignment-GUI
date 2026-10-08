@@ -552,7 +552,18 @@ Image image_after = image_name;
 case 15: {
 string namefile_user;
 Image image_after = image_name;
-
+for(int i = 0; i<image_after.width; i++) {
+        for (int j =0; j<image_after.height; j++) {
+            image_after(i,j,0) = (image_after(i,j,0)+128)/2;
+            image_after(i,j,1)= (image_after(i,j,1)+0)/2;
+            image_after(i,j,2) = (image_after(i,j,2)+128)/2;
+            }
+      
+ }
+  cout << "How would you like to name the image alongside the extension?"<< "\n";
+  cin >> ws;
+  getline(cin,namefile_user);
+  image_after.saveImage(namefile_user);
 }
 
 case 16: {
