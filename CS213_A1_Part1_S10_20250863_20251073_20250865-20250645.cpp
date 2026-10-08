@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <algorithm>
 
 /* Assignment 1 Part 1
 Group Members:
@@ -98,9 +99,9 @@ void resize(Image& image_param){
             h = image_param.height / 2;
             break;
         case 3:
-            cout << "new width: ";
+            cout << "Enter the custom width: ";
             cin >> w;
-            cout << "new height ";
+            cout << "Enter the custom height: ";
             cin >> h;
             break;
 
@@ -139,12 +140,14 @@ bool flag = true;
 int option_no;
 string s,choice;
 cout << "Which photo would you like to do the changes in, make sure you chose the image with the right filename and extension." << endl;
+cin >> ws;
 getline(cin, s);
 Image image_name(s);
 while(flag) 
 {
 cout << "Which option would you like to do?" << "\n";
 cout <<"1: Grayscale" << "\n" << "2: Black and White" << "\n" << "3: Inverted Image" << "\n" <<"4: Adding a frame onto a picture"<< "\n" << "5: Flip an Image (Horizontally/Vertically)" << "\n" << "6: Rotate an Image" << "\n" << "7: Darken/Lighten Image" << "\n" << "8: Resize an Image" <<"\n";
+cout << "9: Merge/Blend Two Images" << "\n" << "10: Detect Image Edges" << "\n" << "11: Crop Image" << "\n" << "12: Blur Image" << "\n" << "13: Adjust Natural Sunlight of Picture" << "\n" << "14: TV Image Effect" << "\n" << "15: Purple Image Effect" << "\n" << "16: Infrared Image Effect" << "\n" << "17: Skew Images" << "\n" << "18: Oil Paint an Image"<< "\n";
 cin >> option_no;
 switch(option_no) 
 {
@@ -399,6 +402,137 @@ string namefile_user;
 Image image_after = image_name;
 resize(image_after);
 }
+
+
+
+case 9: {
+    string namefile_user;
+    Image image_after = image_name;
+    string second_image_filename;
+    cout << "Enter the second image filename with extension to blend with the first image: " << "\n";
+    cin >> second_image_filename;
+
+    Image second_image(second_image_filename);
+    if(image_after.width == second_image.width && image_after.height == second_image.height) {
+        for(int i = 0; i < image_after.width; i++) {
+            for(int j = 0; j < image_after.height; j++) {
+                for(int k = 0; k < 3; k++) {
+                    image_after(i, j, k) = (image_after(i, j, k) + second_image(i, j, k)) / 2;
+                }
+            }
+        }
+        cout << "How would you like to name the image alongside the extension?"<< "\n";
+        cin >> ws; 
+        getline(cin,namefile_user);
+        image_after.saveImage(namefile_user);
+    }
+    else {
+        cout << "Uh oh.., both images have different dimensions. Would you like to select option 1 to resize the image or option 2 to merge the common area of both images? (Enter 1 or 2): " << "\n";
+        int resize_or_merge;
+        cin >> resize_or_merge;
+        while(resize_or_merge != 1 && resize_or_merge != 2) {
+            cout << "Invalid input. Please enter 1 to resize or 2 to merge: " << "\n";
+            cin >> resize_or_merge;
+        }
+    if(resize_or_merge == 1) {
+        int target_width = max(image_after.width, second_image.width);
+        int target_height = max(image_after.height, second_image.height);
+        Image blended_image(target_width, target_height);
+        for(int p = 0; p < target_width-1; ++p) {
+            for(int q = 0; q < target_height-1; ++q) {
+                int src_x1 = p * image_after.width / target_width;
+                int src_y1 = q * image_after.height / target_height;
+                int src_x2 = p * second_image.width / target_width;
+                int src_y2 = q * second_image.height / target_height;
+                for(int k = 0; k < 3; ++k) {
+                    blended_image(p, q, k) = (image_after(src_x1, src_y1, k) + second_image(src_x2, src_y2, k)) / 2;
+                }
+            }
+        }
+        image_after = blended_image;
+    }
+    else {
+        int target_width = min(image_after.width, second_image.width);
+        int target_height = min(image_after.height, second_image.height);
+        Image blended_image(target_width, target_height);
+        for(int p = 0; p < target_width-1; ++p) {
+            for(int q = 0; q < target_height-1; ++q) {
+                for(int k = 0; k < 3; ++k) {
+                    blended_image(p, q, k) = (image_after(p, q, k) + second_image(p, q, k)) / 2;
+                }
+            }
+        }
+        image_after = blended_image;
+    }
+}
+cout << "How would you like to name the image alongside the extension?"<< "\n";
+cin >> ws;
+getline(cin,namefile_user);
+image_after.saveImage(namefile_user);
+break;
+}
+
+
+
+case 10: {
+string namefile_user;
+Image image_after = image_name;
+
+}
+
+
+case 11: {
+string namefile_user;
+Image image_after = image_name;
+
+}
+
+case 12: {
+string namefile_user;
+Image image_after = image_name;
+
+}
+case 13: {
+string namefile_user;
+Image image_after = image_name;
+
+}
+
+case 14: {
+string namefile_user;
+Image image_after = image_name;
+
+}
+
+
+case 15: {
+string namefile_user;
+Image image_after = image_name;
+
+}
+
+case 16: {
+string namefile_user;
+Image image_after = image_name;
+
+}
+case 17: {
+string namefile_user;
+Image image_after = image_name;
+
+}
+
+
+case 18: {
+string namefile_user;
+Image image_after = image_name;
+
+}
+
+
+
+
+
 break;
 default:
 cout << "Error in the query choice number you have entered, please try again";
