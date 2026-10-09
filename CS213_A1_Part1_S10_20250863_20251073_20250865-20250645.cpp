@@ -545,8 +545,28 @@ Image image_after = image_name;
 case 14: {
 string namefile_user;
 Image image_after = image_name;
-
-}
+for(int i = 0; i < image_after.width-1; i++) {
+        for (int j =0; j<image_after.height-1; j++) {
+            if(j % 2 == 0 || j % 3 == 0) {
+                image_after(i,j,0) = (image_after(i,j,0)*3)/5;
+                image_after(i,j,1) = (image_after(i,j,1)*3)/5;
+                image_after(i,j,2) = (image_after(i,j,2)*3)/5;
+            }
+            int noise  = (rand() % 31) - 15;
+            for(int k = 0; k < 3; k++) {
+                int pixel_value = image_after(i,j,k) + noise;
+                if(pixel_value > 255) pixel_value = 255;
+                else if(pixel_value < 0) pixel_value = 0;
+                image_after(i,j,k) = pixel_value;
+            }
+        }
+    }
+ cout << "How would you like to name the image alongside the extension?"<< "\n";
+  cin >> ws;
+  getline(cin,namefile_user);
+  image_after.saveImage(namefile_user);
+  break;
+ }
 
 
 case 15: {
