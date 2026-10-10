@@ -158,6 +158,41 @@ void resize(Image& image_param){
 }
 
 
+
+void OilPainterFunction(Image& image_param){
+
+for (int y = 0; y < image_param.height; ++y) {
+        for (int x = 0; x < image_param.width; ++x) {
+            int r = 0, g = 0, b = 0;
+            int count = 0;
+
+            for (int i = -2; i <= 2; ++i) {
+                for (int j = -2; j <= 2; ++j) {
+                    int w = x + j;
+                    int z = y + i;
+
+                    if (w < 0 || w >= image_param.width || z < 0 || z >= image_param.height) {
+                        continue;
+                    }
+
+                    r += image_param.getPixel(w, z, 0);
+                    g += image_param.getPixel(w, z, 1);
+                    b += image_param.getPixel(w, z, 2);
+                    ++count;
+                }
+            }
+
+            int ar = r / count ;
+            int ag = g / count ;
+            int ab = b / count ;          
+            
+            image_param.setPixel(x, y, 0, ar);
+            image_param.setPixel(x, y, 1, ag);
+            image_param.setPixel(x, y, 2, ab);
+        }
+    }
+}
+
 int main() 
 {
 bool flag = true;
@@ -640,7 +675,11 @@ break;
 case 18: {
 string namefile_user;
 Image image_after = image_name;
-
+OilPainterFunction(image_after);
+cout << "How would you like to name the image alongside the extension?"<< "\n";
+cin >> ws;
+getline(cin,namefile_user);
+image_after.saveImage(namefile_user);
 }
 
 
