@@ -5,7 +5,6 @@
 #include <string>
 #include <algorithm>
 #include <cmath>
-#include <numbers>
 /* Assignment 1 Part 1
 Group Members:
 1. Youssef Khaled Hussein 20250863 (The one who'll submit the assignment 1 part 1) 
@@ -157,11 +156,47 @@ void resize(Image& image_param){
     cust.saveImage(namefile_user);
 }
 
+void Blur(Image& pic){
+
+    int radius;
+    cout << "Enter blur intensity \n";
+    cin >> radius;
+    Image blurred = pic;
+    
+    int k_area = (2*radius + 1)*(2*radius + 1);
+
+        for (int i = 0; i < pic.width; i++) {
+            for (int j = 0; j < pic.height; j++) {
+                for (int k = 0; k < pic.channels; k++) {
+                    int sum=0;
+                    int count=0;
+                    for (int x = - radius; x <= radius; x++){
+                    for (int y = - radius; y <= radius; y++){
+                        int nx = i + x ;
+                        int ny = j + y;
+                        if (nx >= 0 && nx < pic.width && ny >= 0 && ny < pic.height) {
+                            sum += pic.getPixel(nx, ny, k);
+                            count++;
+                        }
+                    }
+                }
+                blurred.setPixel(i, j, k, sum / count);
+                }
+            }
+        }
+        pic = blurred;
+        }
+
+
+
+
+
+
+
 
 
 void OilPainterFunction(Image& image_param){
-
-for (int y = 0; y < image_param.height; ++y) {
+    for (int y = 0; y < image_param.height; ++y) {
         for (int x = 0; x < image_param.width; ++x) {
             int r = 0, g = 0, b = 0;
             int count = 0;
@@ -443,6 +478,7 @@ case 8: {
 string namefile_user;
 Image image_after = image_name;
 resize(image_after);
+break;
 }
 
 
@@ -576,12 +612,17 @@ break;
 case 12: {
 string namefile_user;
 Image image_after = image_name;
+Blur(image_after);
+cout << "How would you like to name the image alongside the extension?"<< "\n";
+cin >> ws;
+getline(cin,namefile_user);
+image_after.saveImage(namefile_user);
 break;
 }
 case 13: {
 string namefile_user;
 Image image_after = image_name;
-
+break;
 }
 
 case 14: {
@@ -626,11 +667,13 @@ for(int i = 0; i<image_after.width; i++) {
   cin >> ws;
   getline(cin,namefile_user);
   image_after.saveImage(namefile_user);
+  break;
 }
 
 case 16: {
 string namefile_user;
 Image image_after = image_name;
+break;
 
 }
 case 17: {
