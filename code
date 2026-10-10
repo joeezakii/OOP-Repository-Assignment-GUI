@@ -4,6 +4,52 @@
 #include "Image_Class.h"
 
 using namespace std;
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include "Image_Class.h"
+using namespace std;
+//**Box blur uses 1/9 with a kernal of all ones*/
+
+void blur(){
+
+    string namee;
+    cout << "صلاWhich photo would you like to do the changes in, make sure you chose the image with the right filename and extension." << endl;
+    cin >> namee;
+    Image pic(namee);
+    int radius;
+    cout << "eneter blur intensiy (note for quick testing dont go over) ";
+    cin >> radius;
+    Image blured(pic.width +(2 * radius), pic.height + (2 * radius));
+    int sum=0;
+    int k_area = (2*radius + 1)*(2*radius + 1);
+
+        for (int x = 0; x < pic.width; x++) {
+            for (int y = 0; y < pic.height; y++) {
+                for (int k = 0; k < pic.channels; k++) {
+                    blured(x + radius, y + radius, k) = pic(x, y, k);
+                }
+            }
+        }
+
+    for (int i = radius; i < blured.width - radius; i++){
+        for (int j = radius; j < blured.height - radius; j++){
+            for (int k = 0; k < blured.channels; k++){
+            
+                int sum = 0;
+                for (int x = - radius; x <= radius; x++){
+                    for (int y = - radius; y <= radius; y++){
+                        sum = sum + blured(i + x,j + y,k);
+                    }
+                }
+                blured(i, j, k) = sum / k_area;
+            }
+        }
+    }
+  
+    blured.saveImage("new_photo.jpeg");
+}
+
 void resize(){
 
     string namee;
@@ -113,7 +159,8 @@ void frame(){
 }
 
 int main() {
-    frame();
+blur();
+frame();
     resize();
     return 0;
 }
