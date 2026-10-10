@@ -1,9 +1,11 @@
+#define _USE_MATH_DEFINES // this is a key to unlock constants like pi inside cmath which is used in case 17 with the radian formula
 #include "Image_Class.h"
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <algorithm>
 #include <cmath>
+#include <numbers>
 /* Assignment 1 Part 1
 Group Members:
 1. Youssef Khaled Hussein 20250863 (The one who'll submit the assignment 1 part 1) 
@@ -40,7 +42,29 @@ void grayscale(Image& image)
         }
     }
 }
-
+void blackandwhite(Image& image_param) {
+    for(int y = 0; y < image_param.height; ++y) {
+    for(int x = 0; x < image_param.width; ++x) {
+        unsigned int red_colour = image_param.getPixel(x,y,0);
+        unsigned int green_colour = image_param.getPixel(x,y,1);
+        unsigned int blue_colour= image_param.getPixel(x,y,2);
+        unsigned int gray_value = int((red_colour*0.2126)+(green_colour*0.7152)+(blue_colour*0.0722));
+        //such that 4th parameter of set_pixel is the value of gray colour
+        image_param.setPixel(x,y,0,gray_value);
+        image_param.setPixel(x,y,1,gray_value);
+        image_param.setPixel(x,y,2,gray_value);
+    }
+}
+}
+void InvertImage(Image& image_param) {
+      for (int i = 0; i < image_param.width; i++) {
+        for (int j = 0; j < image_param.height; j++) {
+            for (int k = 0; k < 3; k++) {
+                image_param(i, j, k) = 255 - image_param(i, j, k);
+            }
+        }
+    }
+}
 //flips the image horziontally (Ymen shmal)
 void horizontalFlip(Image& image)
 {
@@ -166,18 +190,7 @@ case 2: {
 int x,y;
 string namefile_user;
 Image image_after = image_name;
-for(int y = 0; y < image_after.height; ++y) {
-    for(int x = 0; x < image_after.width; ++x) {
-        unsigned int red_colour = image_name.getPixel(x,y,0);
-        unsigned int green_colour = image_name.getPixel(x,y,1);
-        unsigned int blue_colour= image_name.getPixel(x,y,2);
-        unsigned int gray_value = int((red_colour*0.2126)+(green_colour*0.7152)+(blue_colour*0.0722));
-        //such that 4th parameter of set_pixel is the value of gray colour
-        image_after.setPixel(x,y,0,gray_value);
-        image_after.setPixel(x,y,1,gray_value);
-        image_after.setPixel(x,y,2,gray_value);
-    }
-}
+blackandwhite(image_after);
 cout << "How would you like to name the image alongside the extension?"<< "\n";
 cin >> ws;
 getline(cin,namefile_user);
@@ -188,13 +201,7 @@ case 3:
 {
 string namefile_user;
 Image image_after = image_name;
-  for (int i = 0; i < image_after.width; i++) {
-        for (int j = 0; j < image_after.height; j++) {
-            for (int k = 0; k < 3; k++) {
-                image_after(i, j, k) = 255 - image_after(i, j, k);
-            }
-        }
-    }
+InvertImage(image_after);
 cout << "How would you like to name the image alongside the extension?"<< "\n";
 cin >> ws;
 getline(cin,namefile_user);
@@ -210,7 +217,7 @@ case 4:
                 cout << "Enter padding size in pixels (e.g. 500): ";
                 cin >> padding;
             } while (padding < 0);
-    padding = padding * 2;
+            padding = padding * 2;
             do {
                 cout << "Select border color:\n1. Red\n2. Green\n3. Blue\n4. Custom RGB\nEnter choice (1-4): ";
                 cin >> choice;
@@ -594,7 +601,39 @@ Image image_after = image_name;
 case 17: {
 string namefile_user;
 Image image_after = image_name;
-
+int angle;
+cout << "Enter the angle of skew (in degrees): ";
+cin >> angle;
+double pi = M_PI; 
+double radians = angle * pi / 180.0; 
+int shift = abs(tan(radians) * image_after.height);
+int target_width = image_after.width + shift;
+int target_height = image_after.height;
+Image skewed_image(target_width, target_height);
+for (int i = 0; i < target_width; ++i) {
+        for (int j = 0; j < target_height; ++j) {
+            skewed_image(i, j, 0) = 255;
+            skewed_image(i, j, 1) = 255;
+            skewed_image(i, j, 2) = 255;
+        }
+    }
+for(int i = 0; i < skewed_image.width;++i) {
+    for(int j = 0; j < skewed_image.height;++j) {
+        int offset_y = target_height - 1 - j;
+        int src_x = i - (offset_y * tan(radians));
+        int src_y = j;
+        if (src_x >= 0 && src_x < image_name.width && src_y >= 0 && src_y < image_name.height) {
+                for (int k = 0; k < 3; ++k) {
+                    skewed_image(i, j, k) = image_name.getPixel(src_x, src_y, k);
+                }
+            }
+    }
+}
+cout << "How would you like to name the image alongside the extension?"<< "\n";
+cin >> ws;
+getline(cin,namefile_user);
+skewed_image.saveImage(namefile_user);
+break;
 }
 
 
