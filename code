@@ -14,11 +14,11 @@ using namespace std;
 void blur(){
 
     string namee;
-    cout << "صلاWhich photo would you like to do the changes in, make sure you chose the image with the right filename and extension." << endl;
+    cout << "Which photo would you like to do the changes in, make sure you chose the image with the right filename and extension." << endl;
     cin >> namee;
     Image pic(namee);
     int radius;
-    cout << "eneter blur intensiy (note for quick testing dont go over) ";
+    cout << "eneter blur intensiy (note for quick testing dont go over 5) ";
     cin >> radius;
     Image blured(pic.width +(2 * radius), pic.height + (2 * radius));
     int sum=0;
