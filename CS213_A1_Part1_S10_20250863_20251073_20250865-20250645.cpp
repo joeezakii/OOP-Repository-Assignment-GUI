@@ -9,13 +9,13 @@
 /* Assignment 1 Part 1
 Group Members:
 1. Youssef Khaled Hussein 20250863 (The one who'll submit the assignment 1 part 1) 
-Filters: 2,6
+Filters: 2,6,10,14,17
 2. Bassam Islam Gomaa 20251073 
-Filters 4,8
+Filters 4,8,12,16
 3. Ahmed Bassam Abdelfatah 20250865
-Filters 3,7
+Filters 3,7,11,15,18
 4. Mostafa Mahmoud Abdella 20250645
-Filters 1,5 
+Filters 1,5,9,13
 Section: S10 */
 
 using namespace std;
