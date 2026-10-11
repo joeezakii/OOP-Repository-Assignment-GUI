@@ -229,60 +229,22 @@ void Infrared(Image& image_param) {
 
 
 
-void OilPainterFunction(Image& image_param){
-   int radius = 3;
-    int levels = 20;
-    //loops each pixel
-    for (int x = 0; x < image_param.width; x++)
-    {
-        for (int y = 0; y < image_param.height; y++)
-        {
-            int count[20] = {0};
-            int red[20] = {0};
-            int green[20] = {0};
-            int blue[20] = {0};
+void OilPainterFunction(Image& image_param) {
+    int factor = 48; 
 
-            for (int i = -radius; i <= radius; i++)
-            {
-                for (int j = -radius; j <= radius; j++)
-                {
-                    int nx = x + i;
-                    int ny = y + j;
-                //checks pixel relatively to boundaries
-                    if (nx >= 0 && nx < image_param.width &&
-                        ny >= 0 && ny < image_param.height)
-                    {
-                        int r = image_param.getPixel(nx, ny, 0);
-                        int g = image_param.getPixel(nx, ny, 1);
-                        int b = image_param.getPixel(nx, ny, 2);
-
-                        int brightness = (r + g + b) / 3;
-                        int level = brightness * levels / 256;
-
-                        if (level >= levels)
-                            level = levels - 1;
-
-                        count[level]++;
-                        red[level] += r;
-                        green[level] += g;
-                        blue[level] += b;
-                    }
-                }
-            }
-            
-            int best = 0;
-
-            for (int k = 1; k < levels; k++)
-            {
-                if (count[k] > count[best])
-                    best = k;
-            }
-
-            if (count[best] > 0)
-            {
-                image_param.setPixel(x, y, 0, red[best] / count[best]);
-                image_param.setPixel(x, y, 1, green[best] / count[best]);
-                image_param.setPixel(x, y, 2, blue[best] / count[best]);
+    for (int i = 0; i < image_param.width; ++i) {
+        for (int j = 0; j < image_param.height; ++j) {
+            for (int k = 0; k < 3; ++k) {
+                int val = image_param(i, j, k);
+                
+                // Quantize/round color to the nearest block
+                val = (val / factor) * factor + (factor / 2);
+                
+                // Clamp values between 0 and 255
+                if (val > 255) val = 255;
+                if (val < 0) val = 0;
+                
+                image_param(i, j, k) = val;
             }
         }
     }
