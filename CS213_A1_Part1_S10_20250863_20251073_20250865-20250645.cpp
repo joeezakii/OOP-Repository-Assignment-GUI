@@ -12,9 +12,9 @@ Filters: 2,6,10,14,17
 2. Bassam Islam Gomaa 20251073 
 Filters 4,8,12,16
 3. Ahmed Bassam Abdelfatah 20250865
-Filters 3,7,11,15,18
+Filters 3,7,11,15
 4. Mostafa Mahmoud Abdella 20250645
-Filters 1,5,9,13
+Filters 1,5,9,13,18
 Section: S10 */
 
 using namespace std;
@@ -187,43 +187,85 @@ void Blur(Image& pic){
         pic = blurred;
         }
 
+//pixel has values of 0-255 for each channel this limits the values 
+int limit(int value) {
+    if (value > 255) return 255;
+    if (value < 0) return 0;
+    return value;
+}
+//this applies the sunlight effect to each pixel
+void sunlight(Image& image_param) {
+    for (int x = 0; x < image_param.width; x++) {
+        for (int y = 0; y < image_param.height; y++) {
+            int r = image_param.getPixel(x, y, 0) * 1.15 + 15;
+            int g = image_param.getPixel(x, y, 1) * 1.08 + 15;
+            int b = image_param.getPixel(x, y, 2) * 0.85 + 15;
 
-
-
-
+            image_param.setPixel(x, y, 0, limit(r));
+            image_param.setPixel(x, y, 1, limit(g));
+            image_param.setPixel(x, y, 2, limit(b));
+        }
+    }
+}
 
 
 
 
 void OilPainterFunction(Image& image_param){
-    for (int y = 0; y < image_param.height; ++y) {
-        for (int x = 0; x < image_param.width; ++x) {
-            int r = 0, g = 0, b = 0;
-            int count = 0;
+   int radius = 3;
+    int levels = 20;
+//loops each pixel
+    for (int x = 0; x < image_param.width; x++)
+    {
+        for (int y = 0; y < image_param.height; y++)
+        {
+            int count[20] = {0};
+            int red[20] = {0};
+            int green[20] = {0};
+            int blue[20] = {0};
 
-            for (int i = -2; i <= 2; ++i) {
-                for (int j = -2; j <= 2; ++j) {
-                    int w = x + j;
-                    int z = y + i;
+            for (int i = -radius; i <= radius; i++)
+            {
+                for (int j = -radius; j <= radius; j++)
+                {
+                    int nx = x + i;
+                    int ny = y + j;
+                //checks pixel relatively to boundaries
+                    if (nx >= 0 && nx < image_param.width &&
+                        ny >= 0 && ny < image_param.height)
+                    {
+                        int r = image_param.getPixel(nx, ny, 0);
+                        int g = image_param.getPixel(nx, ny, 1);
+                        int b = image_param.getPixel(nx, ny, 2);
 
-                    if (w < 0 || w >= image_param.width || z < 0 || z >= image_param.height) {
-                        continue;
+                        int brightness = (r + g + b) / 3;
+                        int level = brightness * levels / 256;
+
+                        if (level >= levels)
+                            level = levels - 1;
+
+                        count[level]++;
+                        red[level] += r;
+                        green[level] += g;
+                        blue[level] += b;
                     }
-
-                    r += image_param.getPixel(w, z, 0);
-                    g += image_param.getPixel(w, z, 1);
-                    b += image_param.getPixel(w, z, 2);
-                    ++count;
                 }
             }
-
-            int ar = r / count ;
-            int ag = g / count ;
-            int ab = b / count ;          
             
-            image_param.setPixel(x, y, 0, ar);
-            image_param.setPixel(x, y, 1, ag);
-            image_param.setPixel(x, y, 2, ab);
+            int best = 0;
+
+            for (int k = 1; k < levels; k++)
+            {
+                if (count[k] > count[best])
+                    best = k;
+            }
+
+            if (count[best] > 0)
+            {
+                image_param.setPixel(x, y, 0, red[best] / count[best]);
+                image_param.setPixel(x, y, 1, green[best] / count[best]);
+                image_param.setPixel(x, y, 2, blue[best] / count[best]);
+            }
         }
     }
 }
@@ -622,6 +664,11 @@ break;
 case 13: {
 string namefile_user;
 Image image_after = image_name;
+sunlight(image_after);
+cout << "How would you like to name the image alongside the extension?"<< "\n";
+cin >> ws;
+getline(cin,namefile_user);
+image_after.saveImage(namefile_user);
 break;
 }
 
