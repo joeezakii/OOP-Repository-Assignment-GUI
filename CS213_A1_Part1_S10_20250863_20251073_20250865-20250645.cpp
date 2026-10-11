@@ -208,13 +208,31 @@ void sunlight(Image& image_param) {
     }
 }
 
+void Infrared(Image& image_param) {
+    Image image_infrared = image_param;
+    for(int i = 0; i < image_infrared.width; ++i) {
+        for(int j = 0; j < image_infrared.height; ++j){
+            int r = image_infrared(i,j,0);
+            int g = image_infrared(i,j,1);
+            int b = image_infrared(i,j,2);
+            int avg = (r + g + b) / 3;
+            int newR = 255;                      
+            int newG = 255 - avg;               
+            int newB = (255 - avg) * 0.6;
+                image_infrared.setPixel(i,j,0,newR);
+                image_infrared.setPixel(i,j,1,newG);
+                image_infrared.setPixel(i,j,2,newB);
+        }
+    }
+    image_param = image_infrared;
+}
 
 
 
 void OilPainterFunction(Image& image_param){
    int radius = 3;
     int levels = 20;
-//loops each pixel
+    //loops each pixel
     for (int x = 0; x < image_param.width; x++)
     {
         for (int y = 0; y < image_param.height; y++)
@@ -720,6 +738,11 @@ for(int i = 0; i<image_after.width; i++) {
 case 16: {
 string namefile_user;
 Image image_after = image_name;
+Infrared(image_after);
+cout << "How would you like to name the image alongside the extension?"<< "\n";
+cin >> ws;
+getline(cin,namefile_user);
+image_after.saveImage(namefile_user);
 break;
 
 }
