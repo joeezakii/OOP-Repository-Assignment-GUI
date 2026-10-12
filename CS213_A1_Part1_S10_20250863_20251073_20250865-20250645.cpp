@@ -1,4 +1,3 @@
-// #define _USE_MATH_DEFINES
 #include "Image_Class.h"
 #include <iostream>
 #include <iomanip>
@@ -647,9 +646,7 @@ int main()
              << "13: Adjust Natural Sunlight of Picture" << "\n"
              << "14: TV Image Effect" << "\n"
              << "15: Purple Image Effect" << "\n"
-             << "16: Infrared Image Effect" << "\n"
-             << "17: Skew Images" << "\n"
-             << "18: Oil Paint an Image" << "\n";
+             << "16: Infrared Image Effect" << "\n";
         cin >> option_no;
         switch (option_no)
         {
