@@ -3,7 +3,6 @@
 #include <iomanip>
 #include <string>
 #include <algorithm>
-// #include <cmath>
 /* Assignment 1 Part 2
 
 Group Members:
@@ -415,7 +414,7 @@ void resize(Image &image_param)
             }
         }
     }
-    cust = image_param;
+    image_param = cust;
 }
 void detectEdges(Image &image_param)
 {
