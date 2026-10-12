@@ -135,6 +135,7 @@ void addFrame(Image &image_param)
             }
         }
     }
+    image_param = frame;
 }
 
 // flips the image horziontally (Ymen shmal)
@@ -414,10 +415,7 @@ void resize(Image &image_param)
             }
         }
     }
-    cout << "How would you like to name the image alongside the extension?" << "\n";
-    cin >> ws;
-    getline(cin, namefile_user);
-    cust.saveImage(namefile_user);
+    cust = image_param;
 }
 void detectEdges(Image &image_param)
 {
