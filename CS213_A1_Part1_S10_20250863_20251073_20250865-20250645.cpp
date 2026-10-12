@@ -1,20 +1,20 @@
-#define _USE_MATH_DEFINES // this is a key to unlock constants like pi inside cmath which is used in case 17 with the radian formula
+// #define _USE_MATH_DEFINES 
 #include "Image_Class.h"
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <algorithm>
-#include <cmath>
+// #include <cmath>
 /* Assignment 1 Part 1
 Group Members:
 1. Youssef Khaled Hussein 20250863 (The one who'll submit the assignment 1 part 1) 
-Filters: 2,6,10,14,17
+Filters: 2,6,10,14
 2. Bassam Islam Gomaa 20251073 
 Filters 4,8,12,16
 3. Ahmed Bassam Abdelfatah 20250865
 Filters 3,7,11,15
 4. Mostafa Mahmoud Abdella 20250645
-Filters 1,5,9,13,18
+Filters 1,5,9,13
 Section: S10 */
 
 using namespace std;
@@ -64,6 +64,67 @@ void InvertImage(Image& image_param) {
         }
     }
 }
+
+void addFrame(Image& image_param) {
+    int choice, padding = 0, r = 0, g = 0, b = 0;
+            do {
+                cout << "Enter padding size in pixels (e.g. 500): ";
+                cin >> padding;
+            } while (padding < 0);
+            padding = padding * 2;
+            do {
+                cout << "Select border color:\n1. Red\n2. Green\n3. Blue\n4. Custom RGB\nEnter choice (1-4): ";
+                cin >> choice;
+            }
+            while (choice < 1 || choice > 4);
+
+    switch (choice) {
+        case 1: r = 255; break;
+        case 2: g = 255; break;
+        case 3: b = 255; break;
+        case 4:
+            do {
+                cout << "Enter R G B (0-255): ";
+                cin >> r >> g >> b;
+            }
+            while (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255);
+            break;
+        default:
+            r = g = b = 255;
+            break;
+        }
+
+    Image frame(image_param.width + padding, image_param.height + padding) ;
+
+        for (int i = 0; i < frame.width; i++) {
+            for (int j = 0; j < frame.height; j++) {
+                frame(i, j, 0) = r;
+                frame(i, j, 1) = g;
+                frame(i, j, 2) = b;
+            }
+        }
+        for (int i = 0; i < image_param.width; i++) {
+            for (int j = 0; j < image_param.height; j++) {
+                for (int k = 0; k < image_param.channels; k++) {
+                    frame(i + padding/2, j + padding/2, k) = image_param(i, j, k);
+                }
+            }
+        }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //flips the image horziontally (Ymen shmal)
 void horizontalFlip(Image& image)
 {
@@ -105,6 +166,64 @@ void verticalFlip(Image& image)
         }
     }
 }
+
+void rotate(Image& image_param) {
+    int query;
+double original_centrex = (image_param.width-1)/2.0; 
+double original_centrey = (image_param.height-1)/2.0;
+cout << "Press '1' if you would like to rotate 90 degrees clockwise/270 degrees anticlockwise"<< "\n";
+cout << "Press '2' if you would like to rotate 180 degrees clockwise/anticlockwise" << "\n";
+cout << "Press '3' if you would like to rotate 270 degrees clockwise/90 degrees anticlockwise"<< "\n";
+cout << "Press '4' if you want no changes"<< "\n";
+cin >> query;
+int target_w = (query == 1 || query == 3) ? image_param.height : image_param.width; //if you rotate 90 degrees or 270 degrees, the dimensions will change
+int target_h = (query == 1 || query == 3) ? image_param.width : image_param.height;
+int old_w = image_param.width;
+int old_h = image_param.height;
+double target_centrex = (image_param.width - 1) / 2.0;
+double target_centrey = (image_param.height - 1) / 2.0;
+Image rotated_image(target_w, target_h);
+for(auto y = 0; y < image_param.height; ++y) {
+    for(auto x = 0; x < image_param.width; ++x) {
+        double halal_cheating_ofx = x - target_centrex;
+        double halal_cheating_ofy = y - target_centrey;
+        double spun_x = 0;
+        double spun_y = 0;
+
+        // rotating section
+        if(query == 1) {
+            spun_x = -halal_cheating_ofy;
+            spun_y = halal_cheating_ofx;
+        }
+        else if(query == 2) {
+            spun_x = -halal_cheating_ofx;
+            spun_y = -halal_cheating_ofy;
+        }
+        else if(query == 3) {
+            spun_x = halal_cheating_ofy;
+            spun_y = -halal_cheating_ofx;
+        }
+        else {
+            spun_x = halal_cheating_ofx;
+            spun_y = halal_cheating_ofy; 
+        }
+        int source_x = int(spun_x + original_centrex + 0.5);
+        int source_y = int(spun_y + original_centrey + 0.5);
+       
+        if (source_x >= 0 && source_x < image_param.width && source_y >= 0 && source_y < image_param.height) {
+    rotated_image.setPixel(x, y, 0, image_param.getPixel(source_x, source_y, 0)); // Assign validated value to red
+    rotated_image.setPixel(x, y, 1, image_param.getPixel(source_x, source_y, 1)); // Assign validated value to green
+    rotated_image.setPixel(x, y, 2, image_param.getPixel(source_x, source_y, 2)); // Assign validated value to blue
+}
+}
+}
+image_param = rotated_image;
+}
+
+
+
+
+
 
 void resize(Image& image_param){
     int option,w,h,new_w,new_h;
@@ -161,6 +280,10 @@ void Blur(Image& pic){
     int radius;
     cout << "Enter blur intensity \n";
     cin >> radius;
+    while(radius > 10 || radius < 0) {
+        cout << "Error value in blur intensity, enter a value between 0 to 10" << "\n";
+        cin >> radius;
+    }
     Image blurred = pic;
     
     int k_area = (2*radius + 1)*(2*radius + 1);
@@ -229,26 +352,26 @@ void Infrared(Image& image_param) {
 
 
 
-void OilPainterFunction(Image& image_param) {
-    int factor = 48; 
+// void OilPainterFunction(Image& image_param) {
+//     int factor = 48; 
 
-    for (int i = 0; i < image_param.width; ++i) {
-        for (int j = 0; j < image_param.height; ++j) {
-            for (int k = 0; k < 3; ++k) {
-                int val = image_param(i, j, k);
+//     for (int i = 0; i < image_param.width; ++i) {
+//         for (int j = 0; j < image_param.height; ++j) {
+//             for (int k = 0; k < 3; ++k) {
+//                 int val = image_param(i, j, k);
                 
-                // Quantize/round color to the nearest block
-                val = (val / factor) * factor + (factor / 2);
+//                 // Quantize/round color to the nearest block
+//                 val = (val / factor) * factor + (factor / 2);
                 
-                // Clamp values between 0 and 255
-                if (val > 255) val = 255;
-                if (val < 0) val = 0;
+//                 // Clamp values between 0 and 255
+//                 if (val > 255) val = 255;
+//                 if (val < 0) val = 0;
                 
-                image_param(i, j, k) = val;
-            }
-        }
-    }
-}
+//                 image_param(i, j, k) = val;
+//             }
+//         }
+//     }
+// }
 
 int main() 
 {
@@ -304,54 +427,59 @@ case 4:
 {
     string namefile_user;
     Image image_after = image_name;
-    int choice, padding = 0, r = 0, g = 0, b = 0;
-            do {
-                cout << "Enter padding size in pixels (e.g. 500): ";
-                cin >> padding;
-            } while (padding < 0);
-            padding = padding * 2;
-            do {
-                cout << "Select border color:\n1. Red\n2. Green\n3. Blue\n4. Custom RGB\nEnter choice (1-4): ";
-                cin >> choice;
-            }
-            while (choice < 1 || choice > 4);
+    addFrame(image_after);
 
-    switch (choice) {
-        case 1: r = 255; break;
-        case 2: g = 255; break;
-        case 3: b = 255; break;
-        case 4:
-            do {
-                cout << "Enter R G B (0-255): ";
-                cin >> r >> g >> b;
-            }
-            while (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255);
-            break;
-        default:
-            r = g = b = 255;
-            break;
-        }
 
-    Image frame(image_name.width + padding, image_name.height + padding) ;
 
-        for (int i = 0; i < frame.width; i++) {
-            for (int j = 0; j < frame.height; j++) {
-                frame(i, j, 0) = r;
-                frame(i, j, 1) = g;
-                frame(i, j, 2) = b;
-            }
-        }
-        for (int i = 0; i < image_name.width; i++) {
-            for (int j = 0; j < image_name.height; j++) {
-                for (int k = 0; k < image_name.channels; k++) {
-                    frame(i + padding/2, j + padding/2, k) = image_name(i, j, k);
-                }
-            }
-        }
-    cout << "How would you like to name the image alongside the extension?"<< "\n";
+
+    // int choice, padding = 0, r = 0, g = 0, b = 0;
+    //         do {
+    //             cout << "Enter padding size in pixels (e.g. 500): ";
+    //             cin >> padding;
+    //         } while (padding < 0);
+    //         padding = padding * 2;
+    //         do {
+    //             cout << "Select border color:\n1. Red\n2. Green\n3. Blue\n4. Custom RGB\nEnter choice (1-4): ";
+    //             cin >> choice;
+    //         }
+    //         while (choice < 1 || choice > 4);
+
+    // switch (choice) {
+    //     case 1: r = 255; break;
+    //     case 2: g = 255; break;
+    //     case 3: b = 255; break;
+    //     case 4:
+    //         do {
+    //             cout << "Enter R G B (0-255): ";
+    //             cin >> r >> g >> b;
+    //         }
+    //         while (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255);
+    //         break;
+    //     default:
+    //         r = g = b = 255;
+    //         break;
+    //     }
+
+    // Image frame(image_name.width + padding, image_name.height + padding) ;
+
+    //     for (int i = 0; i < frame.width; i++) {
+    //         for (int j = 0; j < frame.height; j++) {
+    //             frame(i, j, 0) = r;
+    //             frame(i, j, 1) = g;
+    //             frame(i, j, 2) = b;
+    //         }
+    //     }
+    //     for (int i = 0; i < image_name.width; i++) {
+    //         for (int j = 0; j < image_name.height; j++) {
+    //             for (int k = 0; k < image_name.channels; k++) {
+    //                 frame(i + padding/2, j + padding/2, k) = image_name(i, j, k);
+    //             }
+    //         }
+    //     }
+cout << "How would you like to name the image alongside the extension?"<< "\n";
 cin >> ws;
 getline(cin,namefile_user);
-frame.saveImage(namefile_user);
+image_after.saveImage(namefile_user);
 break;
 }
 case 5: {
@@ -384,57 +512,59 @@ break;
 case 6:
 {
 string namefile_user;
-int query;
-double original_centrex = (image_name.width-1)/2.0; 
-double original_centrey = (image_name.height-1)/2.0;
-cout << "Press '1' if you would like to rotate 90 degrees clockwise/270 degrees anticlockwise"<< "\n";
-cout << "Press '2' if you would like to rotate 180 degrees clockwise/anticlockwise" << "\n";
-cout << "Press '3' if you would like to rotate 270 degrees clockwise/90 degrees anticlockwise"<< "\n";
-cout << "Press '4' if you want no changes"<< "\n";
-cin >> query;
-int target_w = (query == 1 || query == 3) ? image_name.height : image_name.width; //if you rotate 90 degrees or 270 degrees, the dimensions will change
-int target_h = (query == 1 || query == 3) ? image_name.width : image_name.height;
-Image image_after(target_w, target_h);
-double target_centrex = (image_after.width - 1) / 2.0;
-double target_centrey = (image_after.height - 1) / 2.0;
-for(auto y = 0; y < image_after.height; ++y) {
-    for(auto x = 0; x < image_after.width; ++x) {
-        double halal_cheating_ofx = x - target_centrex;
-        double halal_cheating_ofy = y - target_centrey;
-        double spun_x = 0;
-        double spun_y = 0;
+Image image_after = image_name;
+rotate(image_after);
+// int query;
+// double original_centrex = (image_name.width-1)/2.0; 
+// double original_centrey = (image_name.height-1)/2.0;
+// cout << "Press '1' if you would like to rotate 90 degrees clockwise/270 degrees anticlockwise"<< "\n";
+// cout << "Press '2' if you would like to rotate 180 degrees clockwise/anticlockwise" << "\n";
+// cout << "Press '3' if you would like to rotate 270 degrees clockwise/90 degrees anticlockwise"<< "\n";
+// cout << "Press '4' if you want no changes"<< "\n";
+// cin >> query;
+// int target_w = (query == 1 || query == 3) ? image_name.height : image_name.width; //if you rotate 90 degrees or 270 degrees, the dimensions will change
+// int target_h = (query == 1 || query == 3) ? image_name.width : image_name.height;
+// Image image_after(target_w, target_h);
+// double target_centrex = (image_after.width - 1) / 2.0;
+// double target_centrey = (image_after.height - 1) / 2.0;
+// for(auto y = 0; y < image_after.height; ++y) {
+//     for(auto x = 0; x < image_after.width; ++x) {
+//         double halal_cheating_ofx = x - target_centrex;
+//         double halal_cheating_ofy = y - target_centrey;
+//         double spun_x = 0;
+//         double spun_y = 0;
 
-        // rotating section
-        if(query == 1) {
-            spun_x = -halal_cheating_ofy;
-            spun_y = halal_cheating_ofx;
-        }
-        else if(query == 2) {
-            spun_x = -halal_cheating_ofx;
-            spun_y = -halal_cheating_ofy;
-        }
-        else if(query == 3) {
-            spun_x = halal_cheating_ofy;
-            spun_y = -halal_cheating_ofx;
-        }
-        else {
-            spun_x = halal_cheating_ofx;
-            spun_y = halal_cheating_ofy; 
-        }
-        int source_x = int(spun_x + original_centrex + 0.5);
-        int source_y = int(spun_y + original_centrey + 0.5);
+//         // rotating section
+//         if(query == 1) {
+//             spun_x = -halal_cheating_ofy;
+//             spun_y = halal_cheating_ofx;
+//         }
+//         else if(query == 2) {
+//             spun_x = -halal_cheating_ofx;
+//             spun_y = -halal_cheating_ofy;
+//         }
+//         else if(query == 3) {
+//             spun_x = halal_cheating_ofy;
+//             spun_y = -halal_cheating_ofx;
+//         }
+//         else {
+//             spun_x = halal_cheating_ofx;
+//             spun_y = halal_cheating_ofy; 
+//         }
+//         int source_x = int(spun_x + original_centrex + 0.5);
+//         int source_y = int(spun_y + original_centrey + 0.5);
 
 
 
 
        
-        if (source_x >= 0 && source_x < image_name.width && source_y >= 0 && source_y < image_name.height) {
-    image_after.setPixel(x, y, 0, image_name.getPixel(source_x, source_y, 0)); // Assign validated value to red
-    image_after.setPixel(x, y, 1, image_name.getPixel(source_x, source_y, 1)); // Assign validated value to green
-    image_after.setPixel(x, y, 2, image_name.getPixel(source_x, source_y, 2)); // Assign validated value to blue
-}
-}
-}
+//         if (source_x >= 0 && source_x < image_name.width && source_y >= 0 && source_y < image_name.height) {
+//     image_after.setPixel(x, y, 0, image_name.getPixel(source_x, source_y, 0)); // Assign validated value to red
+//     image_after.setPixel(x, y, 1, image_name.getPixel(source_x, source_y, 1)); // Assign validated value to green
+//     image_after.setPixel(x, y, 2, image_name.getPixel(source_x, source_y, 2)); // Assign validated value to blue
+// }
+// }
+// }
 cout << "How would you like to name the image alongside the extension?"<< "\n";
 cin >> ws; // what this basically is like when you input the filename, you might put a space or two, this wont count as an input. ws = whitespace
 getline(cin,namefile_user);
@@ -708,54 +838,54 @@ image_after.saveImage(namefile_user);
 break;
 
 }
-case 17: {
-string namefile_user;
-Image image_after = image_name;
-int angle;
-cout << "Enter the angle of skew (in degrees): ";
-cin >> angle;
-double pi = M_PI; 
-double radians = angle * pi / 180.0; 
-int shift = abs(tan(radians) * image_after.height);
-int target_width = image_after.width + shift;
-int target_height = image_after.height;
-Image skewed_image(target_width, target_height);
-for (int i = 0; i < target_width; ++i) {
-        for (int j = 0; j < target_height; ++j) {
-            skewed_image(i, j, 0) = 255;
-            skewed_image(i, j, 1) = 255;
-            skewed_image(i, j, 2) = 255;
-        }
-    }
-for(int i = 0; i < skewed_image.width;++i) {
-    for(int j = 0; j < skewed_image.height;++j) {
-        int offset_y = target_height - 1 - j;
-        int src_x = i - (offset_y * tan(radians));
-        int src_y = j;
-        if (src_x >= 0 && src_x < image_name.width && src_y >= 0 && src_y < image_name.height) {
-                for (int k = 0; k < 3; ++k) {
-                    skewed_image(i, j, k) = image_name.getPixel(src_x, src_y, k);
-                }
-            }
-    }
-}
-cout << "How would you like to name the image alongside the extension?"<< "\n";
-cin >> ws;
-getline(cin,namefile_user);
-skewed_image.saveImage(namefile_user);
-break;
-}
+// case 17: {
+// string namefile_user;
+// Image image_after = image_name;
+// int angle;
+// cout << "Enter the angle of skew (in degrees): ";
+// cin >> angle;
+// double pi = M_PI; 
+// double radians = angle * pi / 180.0; 
+// int shift = abs(tan(radians) * image_after.height);
+// int target_width = image_after.width + shift;
+// int target_height = image_after.height;
+// Image skewed_image(target_width, target_height);
+// for (int i = 0; i < target_width; ++i) {
+//         for (int j = 0; j < target_height; ++j) {
+//             skewed_image(i, j, 0) = 255;
+//             skewed_image(i, j, 1) = 255;
+//             skewed_image(i, j, 2) = 255;
+//         }
+//     }
+// for(int i = 0; i < skewed_image.width;++i) {
+//     for(int j = 0; j < skewed_image.height;++j) {
+//         int offset_y = target_height - 1 - j;
+//         int src_x = i - (offset_y * tan(radians));
+//         int src_y = j;
+//         if (src_x >= 0 && src_x < image_name.width && src_y >= 0 && src_y < image_name.height) {
+//                 for (int k = 0; k < 3; ++k) {
+//                     skewed_image(i, j, k) = image_name.getPixel(src_x, src_y, k);
+//                 }
+//             }
+//     }
+// }
+// cout << "How would you like to name the image alongside the extension?"<< "\n";
+// cin >> ws;
+// getline(cin,namefile_user);
+// skewed_image.saveImage(namefile_user);
+// break;
+// }
 
 
-case 18: {
-string namefile_user;
-Image image_after = image_name;
-OilPainterFunction(image_after);
-cout << "How would you like to name the image alongside the extension?"<< "\n";
-cin >> ws;
-getline(cin,namefile_user);
-image_after.saveImage(namefile_user);
-}
+// case 18: {
+// string namefile_user;
+// Image image_after = image_name;
+// OilPainterFunction(image_after);
+// cout << "How would you like to name the image alongside the extension?"<< "\n";
+// cin >> ws;
+// getline(cin,namefile_user);
+// image_after.saveImage(namefile_user);
+// }
 
 
 
