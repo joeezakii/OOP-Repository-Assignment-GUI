@@ -5,17 +5,22 @@
 #include <string>
 #include <algorithm>
 // #include <cmath>
-/* Assignment 1 Part 1
+/* Assignment 1 Part 2
+
 Group Members:
-1. Youssef Khaled Hussein 20250863 (The one who'll submit the assignment 1 part 1)
-Filters: 2,6,10,14
-2. Bassam Islam Gomaa 20251073
+1. Youssef Khaled Hussein 20250863 S10
+Filters: 2,6,10,14 
+2. Bassam Islam Gomaa 20251073 S10
 Filters 4,8,12,16
-3. Ahmed Bassam Abdelfatah 20250865
+3. Ahmed Bassam Abdelfatah 20250865 S10
 Filters 3,7,11,15
-4. Mostafa Mahmoud Abdella 20250645
+4. Mostafa Mahmoud Abdella 20250645 S33
 Filters 1,5,9,13
-Section: S10 */
+System Diagram (link): https://drive.google.com/file/d/1e3-aYXaxsDk5M_BQSIHgEAUdC9T8wVeo/view?usp=sharing
+Cover Page (link for attachment): https://drive.google.com/file/d/15sVPni21QrRvLyEELZ8vgnmHn0lvryym/view?usp=sharing
+Video Demo (link for video): 
+
+*/
 
 using namespace std;
 // here is where the function (procedure to be much more accurate) starts where it sets an avg value for pixels to provide a grayscale image
@@ -821,28 +826,6 @@ int main()
         {
             string namefile_user;
             Image image_after = image_name;
-            // for (int i = 0; i < image_after.width - 1; i++)
-            // {
-            //     for (int j = 0; j < image_after.height - 1; j++)
-            //     {
-            //         if (j % 2 == 0 || j % 3 == 0)
-            //         {
-            //             image_after(i, j, 0) = (image_after(i, j, 0) * 3) / 5;
-            //             image_after(i, j, 1) = (image_after(i, j, 1) * 3) / 5;
-            //             image_after(i, j, 2) = (image_after(i, j, 2) * 3) / 5;
-            //         }
-            //         int noise = (rand() % 31) - 15;
-            //         for (int k = 0; k < 3; k++)
-            //         {
-            //             int pixel_value = image_after(i, j, k) + noise;
-            //             if (pixel_value > 255)
-            //                 pixel_value = 255;
-            //             else if (pixel_value < 0)
-            //                 pixel_value = 0;
-            //             image_after(i, j, k) = pixel_value;
-            //         }
-            //     }
-            // }
             TVEffect(image_after);
             cout << "How would you like to name the image alongside the extension?" << "\n";
             cin >> ws;
