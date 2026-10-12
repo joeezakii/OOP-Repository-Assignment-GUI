@@ -420,14 +420,13 @@ void detectEdges(Image &image_param)
 {
     grayscale(image_param);
     Image edge_image(image_param.width, image_param.height);
-    for (int i = 1; i < image_param.width; i++)
+    for (int i = 1; i < image_param.width-1; i++)
     {
-        for (int j = 1; j < image_param.height; j++)
+        for (int j = 1; j < image_param.height-1; j++)
         {
             int gx = -1 * image_param(i - 1, j - 1, 0) + 1 * image_param(i + 1, j - 1, 0) + -2 * image_param(i - 1, j, 0) + 2 * image_param(i + 1, j, 0) + -1 * image_param(i - 1, j + 1, 0) + 1 * image_param(i + 1, j + 1, 0);
 
             int gy = -1 * image_param(i - 1, j - 1, 0) - 2 * image_param(i, j - 1, 0) - 1 * image_param(i + 1, j - 1, 0) + 1 * image_param(i - 1, j + 1, 0) + 2 * image_param(i, j + 1, 0) + 1 * image_param(i + 1, j + 1, 0);
-
             int magnitude = (int)sqrt((double)(pow(gx, 2) + pow(gy, 2)));
             if (magnitude > 255)
                 magnitude = 255;
@@ -450,7 +449,7 @@ void Crop(Image &image_param)
     while (w < 0 || x < 0 || y < 0 || z < 0 || w > image_param.width || x > image_param.height || w + y > image_param.width || x + z > image_param.height)
     {
         cout << "Invalid crop dimensions, try entering correct dimension values again.." << endl;
-        cin >> w >> x >> y >> z;
+        cin >> y >> z;
     }
     Image cropped_image(y, z);
     for (int i = 0; i < y; i++)
