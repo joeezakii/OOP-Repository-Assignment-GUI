@@ -16,11 +16,11 @@ Filters 4,8,12,16
 Filters 3,7,11,15
 4. Mostafa Mahmoud Abdella 20250645 S33
 Filters 1,5,9,13,18
-System Diagram for the Project (link) (UML Diagram) (Filters 1-18): https://drive.google.com/drive/folders/1igpkuZeL_rrXYI99umsA1RM49dQUk2uQ
+System Diagram for the Project (link) (UML Diagram) (Filters 1-18): https://drive.google.com/file/d/1aGqagwqi1lvToWlKPrz_IsJevQZGJ2WP/view?usp=sharing
 Cover Page (link for attachment): https://drive.google.com/file/d/15sVPni21QrRvLyEELZ8vgnmHn0lvryym/view?usp=sharing
-Summary Document for the work put in: https://docs.google.com/document/d/1fXF2ANPdW4ifFQjO1fEzOisK1F8GmWxs/edit?usp=drive_link&ouid=100724457479538749702&rtpof=true&sd=true
-Video Demo (link for video): https://drive.google.com/drive/folders/1igpkuZeL_rrXYI99umsA1RM49dQUk2uQ
-Video Demo 2/2 (Filters 17 and 18): https://drive.google.com/drive/folders/1igpkuZeL_rrXYI99umsA1RM49dQUk2uQ
+Summary Document for the work put in: https://docs.google.com/document/d/1fXF2ANPdW4ifFQjO1fEzOisK1F8GmWxs/edit?usp=sharing&ouid=100724457479538749702&rtpof=true&sd=true
+Video Demo (link for video): https://drive.google.com/file/d/1tprvHpaURXLiuJHb6lnFRxM74cg6jr7k/view?usp=sharing
+Video Demo 2/2 (Filters 17 and 18): https://drive.google.com/file/d/1sjuAcBIwuL7w4iEo44RWCiMY8QSQMV_6/view?usp=sharing
 Google Drive (link): https://drive.google.com/drive/folders/1igpkuZeL_rrXYI99umsA1RM49dQUk2uQ?usp=drive_link
 GitHub Repository (link): https://github.com/joeezakii/OOP-Repository-Assignment-GUI
 */
