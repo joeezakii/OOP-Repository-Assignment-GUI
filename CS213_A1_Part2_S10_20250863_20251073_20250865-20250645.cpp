@@ -1,23 +1,28 @@
+#define M_PI 3.14159265358979323846
 #include "Image_Class.h"
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <algorithm>
+#include <cmath>
 /* Assignment 1 Part 2
 
 Group Members:
 1. Youssef Khaled Hussein 20250863 S10
-Filters: 2,6,10,14 
+Filters: 2,6,10,14,17 
 2. Bassam Islam Gomaa 20251073 S10
 Filters 4,8,12,16
 3. Ahmed Bassam Abdelfatah 20250865 S10
 Filters 3,7,11,15
 4. Mostafa Mahmoud Abdella 20250645 S33
-Filters 1,5,9,13
-System Diagram (link): https://drive.google.com/file/d/1e3-aYXaxsDk5M_BQSIHgEAUdC9T8wVeo/view?usp=sharing
+Filters 1,5,9,13,18
+System Diagram for the Project (link) (UML Diagram) (Filters 1-18): https://drive.google.com/drive/folders/1igpkuZeL_rrXYI99umsA1RM49dQUk2uQ
 Cover Page (link for attachment): https://drive.google.com/file/d/15sVPni21QrRvLyEELZ8vgnmHn0lvryym/view?usp=sharing
+Summary Document for the work put in: https://docs.google.com/document/d/1fXF2ANPdW4ifFQjO1fEzOisK1F8GmWxs/edit?usp=drive_link&ouid=100724457479538749702&rtpof=true&sd=true
 Video Demo (link for video): https://drive.google.com/drive/folders/1igpkuZeL_rrXYI99umsA1RM49dQUk2uQ
+Video Demo 2/2 (Filters 17 and 18): https://drive.google.com/drive/folders/1igpkuZeL_rrXYI99umsA1RM49dQUk2uQ
 Google Drive (link): https://drive.google.com/drive/folders/1igpkuZeL_rrXYI99umsA1RM49dQUk2uQ?usp=drive_link
+GitHub Repository (link): https://github.com/joeezakii/OOP-Repository-Assignment-GUI
 */
 
 using namespace std;
@@ -593,27 +598,75 @@ void Infrared(Image &image_param)
     }
     image_param = image_infrared;
 }
+ void SkewedImage(Image& image_param) {
+        Image image_var;
+        image_var = image_param;
+        int angle;
+        cout << "Enter the angle of skew (in degrees): ";
+        cin >> angle;
+        double pi = M_PI;
+        double radians = angle * pi / 180.0;
+      int shift = abs(tan(radians) * image_param.height);
+    int target_width = image_param.width + shift;
+    int target_height = image_param.height;
 
-// void OilPainterFunction(Image& image_param) {
-//     int factor = 48;
+    Image skewed_image(target_width, target_height);
 
-//     for (int i = 0; i < image_param.width; ++i) {
-//         for (int j = 0; j < image_param.height; ++j) {
-//             for (int k = 0; k < 3; ++k) {
-//                 int val = image_param(i, j, k);
+    // Initialize background to white (255)
+    for (int i = 0; i < target_width; ++i) {
+        for (int j = 0; j < target_height; ++j) {
+            skewed_image(i, j, 0) = 255;
+            skewed_image(i, j, 1) = 255;
+            skewed_image(i, j, 2) = 255;
+        }
+    }
 
-//                 // Quantize/round color to the nearest block
-//                 val = (val / factor) * factor + (factor / 2);
+    for (int i = 0; i < skewed_image.width; ++i) {
+        for (int j = 0; j < skewed_image.height; ++j) {
+            int offset_y = target_height - 1 - j;
+            int src_x = i - (offset_y * tan(radians));
+            int src_y = j;
 
-//                 // Clamp values between 0 and 255
-//                 if (val > 255) val = 255;
-//                 if (val < 0) val = 0;
+            if (src_x >= 0 && src_x < image_param.width && src_y >= 0 && src_y < image_param.height) {
+                for (int k = 0; k < 3; ++k) {
+                    // Use parentheses operator () consistent with your other functions
+                    skewed_image(i, j, k) = image_param(src_x, src_y, k);
+                }
+            }
+        }
+    }
+    image_param = skewed_image;
+}
 
-//                 image_param(i, j, k) = val;
-//             }
-//         }
-//     }
-// }
+
+
+
+
+
+
+
+
+
+void OilPainterFunction(Image& image_param) {
+    int factor = 48;
+
+    for (int i = 0; i < image_param.width; ++i) {
+        for (int j = 0; j < image_param.height; ++j) {
+            for (int k = 0; k < 3; ++k) {
+                int val = image_param(i, j, k);
+
+                // Quantize/round color to the nearest block
+                val = (val / factor) * factor + (factor / 2);
+
+                // Clamp values between 0 and 255
+                if (val > 255) val = 255;
+                if (val < 0) val = 0;
+
+                image_param(i, j, k) = val;
+            }
+        }
+    }
+}
 
 int main()
 {
@@ -642,7 +695,9 @@ int main()
              << "13: Adjust Natural Sunlight of Picture" << "\n"
              << "14: TV Image Effect" << "\n"
              << "15: Purple Image Effect" << "\n"
-             << "16: Infrared Image Effect" << "\n";
+             << "16: Infrared Image Effect" << "\n"
+             << "17: Skew Image Effect" << "\n" 
+             << "18: Oil Painting Effect" << "\n";
         cin >> option_no;
         switch (option_no)
         {
@@ -850,53 +905,26 @@ int main()
             image_after.saveImage(namefile_user);
             break;
         }
-        // case 17: {
-        // string namefile_user;
-        // Image image_after = image_name;
-        // int angle;
-        // cout << "Enter the angle of skew (in degrees): ";
-        // cin >> angle;
-        // double pi = M_PI;
-        // double radians = angle * pi / 180.0;
-        // int shift = abs(tan(radians) * image_after.height);
-        // int target_width = image_after.width + shift;
-        // int target_height = image_after.height;
-        // Image skewed_image(target_width, target_height);
-        // for (int i = 0; i < target_width; ++i) {
-        //         for (int j = 0; j < target_height; ++j) {
-        //             skewed_image(i, j, 0) = 255;
-        //             skewed_image(i, j, 1) = 255;
-        //             skewed_image(i, j, 2) = 255;
-        //         }
-        //     }
-        // for(int i = 0; i < skewed_image.width;++i) {
-        //     for(int j = 0; j < skewed_image.height;++j) {
-        //         int offset_y = target_height - 1 - j;
-        //         int src_x = i - (offset_y * tan(radians));
-        //         int src_y = j;
-        //         if (src_x >= 0 && src_x < image_name.width && src_y >= 0 && src_y < image_name.height) {
-        //                 for (int k = 0; k < 3; ++k) {
-        //                     skewed_image(i, j, k) = image_name.getPixel(src_x, src_y, k);
-        //                 }
-        //             }
-        //     }
-        // }
-        // cout << "How would you like to name the image alongside the extension?"<< "\n";
-        // cin >> ws;
-        // getline(cin,namefile_user);
-        // skewed_image.saveImage(namefile_user);
-        // break;
-        // }
+        case 17: {
+        string namefile_user;
+        Image image_after = image_name;
+        SkewedImage(image_name);
+        cout << "How would you like to name the image alongside the extension?"<< "\n";
+        cin >> ws;
+        getline(cin,namefile_user);
+        image_name.saveImage(namefile_user);
+        break;
+        }
 
-        // case 18: {
-        // string namefile_user;
-        // Image image_after = image_name;
-        // OilPainterFunction(image_after);
-        // cout << "How would you like to name the image alongside the extension?"<< "\n";
-        // cin >> ws;
-        // getline(cin,namefile_user);
-        // image_after.saveImage(namefile_user);
-        // }
+        case 18: {
+        string namefile_user;
+        Image image_after = image_name;
+        OilPainterFunction(image_after);
+        cout << "How would you like to name the image alongside the extension?"<< "\n";
+        cin >> ws;
+        getline(cin,namefile_user);
+        image_after.saveImage(namefile_user);
+        }
 
         break;
         default:
